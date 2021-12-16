@@ -10,27 +10,63 @@ If you have not already, you will also need to install the database driver npm p
 `npm install --save tedious # Microsoft SQL Server`
 
 
-After installation, you are basically good to go! You will need to set up a database connection. An example of this (as well as defining a model and querying a table) can be found in `simpleExample.js`, or for a more robust example with wiring into express.js, check out `/simpleServer/`.
+## Creating a sequelize instance:
+After installation, to actually get going you need to instantiate sequelize, and provide it with information about your database. 
+Here is a very simple setup, where I've got everything that sequel needs hardcoded here (though normally, connection, port, database, username, and password would all be read from environment variables)
+```
+const { Sequelize } = require('sequelize');
+
+const connection = "http://localhost";
+const port = 1433;
+const database = "testDatabaseName";
+const username = "louisAntweiler";
+const password = "extremelySecure(!)Password1";
+
+const handleLog = msg => {
+    console.log(msg);
+}
+
+const sequelize = new Sequelize(database, username, password, {
+    host: connection,
+    port: port,
+    dialect: "mssql",
+    dialectOptions: {
+        port: port,
+    },
+    logging: handleLog
+})
+
+module.exports = sequelize
+```
+
+You'll notice here that the dialect I've set is `mssql`. mysql, postgres, and mariadb are other options here, but they will also require the corresponding npm package installed. See the [sequelized docs](https://sequelize.org/master/manual/getting-started.html) for what the package name is.
+
+Once you have your sequelize instance set up, you can immediately start using it. Some examples are:
+
+- Running a raw query: `sequelize.query("SELECT * FROM ... ");`
+- Defining a model: `sequelize.define("modelName", { ...modelTypeDefinition }, { ...modelOptions });`
+- updating the database models: `sequelize.sync({ ...destructiveSyncOptions });`
+
+
+A more fleshed out example of all of this running on a server can be found in `/simpleServer/` in [this repo](https://github.com/FLAntweiler/sequelizePOC).
 
 ## Extra Documentation
 
-### For setup/installation look here:
-https://sequelize.org/master/manual/getting-started.html
+### For setup/installation look [here](https://sequelize.org/master/manual/getting-started.html).
 
-### For documentation on models and datatypes:
-https://sequelize.org/master/manual/model-basics.html
+
+### For documentation on models and datatypes, look [here](https://sequelize.org/master/manual/model-basics.html).
+
 
 ### For querying your database:
-https://sequelize.org/master/manual/model-querying-basics.html
+[basics](https://sequelize.org/master/manual/model-querying-basics.html)
 
 and
 
-https://sequelize.org/master/manual/model-querying-finders.html
+[more advanced](https://sequelize.org/master/manual/model-querying-finders.html)
 
 
-### For everything else (there are a lot of other things you can do) checkout the full docs at:
-https://sequelize.org/master/
-
+### For everything else (there are a lot of other things you can do) checkout the full docs [here](https://sequelize.org/master/).
 
 
 <br>
@@ -57,6 +93,7 @@ https://sequelize.org/master/
 5. Run `npm run dbRollout` to enact your changes.
    - I added this script to the package.json here, all it does is run the `runMigrations.js` script with node. 
 
+
 <br>
 <br>
 <br>
@@ -65,6 +102,11 @@ https://sequelize.org/master/
 The migrations are kept separate from the rest of the build / run process
 - If necessary, this could be combined to run as part of the `start` step or somewhere else in the pipeline.
 - Having it separate makes it ultimately flexible.
+
+A note about types
+- Be as specific as possible with your types. `DataTypes.STRING` defaults to `NVARCHAR(255)`, so if you were hoping for a longer character count then you should specify it with `DataTypes.STRING(1000)` etc.
+- If you are running an update on an existing table, and you have specified the type to be `VARCHAR(30)`, if the type on the model you're overriding it with is `DataTypes.String` the new dataType will be `NVARCHAR(255)` (assuming `alter` is set to `true`);
+- See more about types [here](https://sequelize.org/master/manual/model-basics.html#data-types)
 
 Nothing is enforcing that you don't change past definitions
 - Keeping old definitions in tact is useful if problems arise, or if you want a record of when a db change happened.
