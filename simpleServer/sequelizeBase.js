@@ -2,10 +2,10 @@ const { Sequelize } = require('sequelize');
 
 // reading from .env, just need to get these things into sequelize
 require('dotenv').config();
-const connection = process.env.PROVIDER_DB_SERVER;
-const database = process.env.PROVIDER_DB_DATABASE;
-const username = process.env.PROVIDER_DB_USERNAME;
-const password = process.env.PROVIDER_DB_PASSWORD;
+const connection = process.env.PROVIDER_DB_SERVER || "localhost";
+const database = process.env.PROVIDER_DB_DATABASE || "testdb";
+const username = process.env.PROVIDER_DB_USERNAME || "sa";
+const password = process.env.PROVIDER_DB_PASSWORD || "reallyStrong(!)password";
 
 console.log(connection, database, username, password)
 // could publish log to graylog or somewhere else instead.
