@@ -1,10 +1,4 @@
 const { DataTypes, UUIDV4 } = require('sequelize');
-const BASE_MODEL_OPTIONS = require('../baseOptions');
-
-const MODEL_OPTIONS_V1 = {
-    ...BASE_MODEL_OPTIONS,
-    createdAt: false,
-}
 
 // using freeze here to prevent object mutation.
 const EMPLOYEE_TYPE_DEFINITION =  {
@@ -24,6 +18,5 @@ const EMPLOYEE_TYPE_DEFINITION =  {
 }
 
 module.exports = {
-    EMPLOYEE_TYPE_DEFINITION,
-    MODEL_OPTIONS_V1
+    EMPLOYEE_TYPE_DEFINITION
 };
