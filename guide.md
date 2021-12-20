@@ -117,7 +117,7 @@ const {
 Employee.findAll();
 ```
 
-There is an example of the generated models in`/simpleServer/modelGenerationTest/` in [this repo](https://github.com/FLAntweiler/sequelizePOC).
+There is an example of the generated models in `/simpleServer/modelGenerationTest/` in [this repo](https://github.com/FLAntweiler/sequelizePOC).
 
 <br>
 
@@ -182,3 +182,57 @@ Currently this process is all using Postgresql
 - there may be slight differences for other database drivers
 - this has NOT been tested on mssql. While some time was spent looking into how this would go, and ultimately it looks like it all should work, it has not been verified (pg was chosen for this POC because I'm working on a mac). 
 - a general buffer might be a good idea when pointing stories to account for this. 
+
+
+<br>
+<br>
+<br>
+
+
+# Testing Database Changes
+## Setup necessary to make testing possible
+In order to be able to test changes accurately, a separate test database is needed.
+This is for several reasons:
+- For the test to be accurate it needs to be run on a database, but we don't want a test to interfere with a database outside of a testing environment.
+- If the database change has issues then the changes applied in test could cause problems if it were run on a database used outside of testing.
+- Rolling back changes to a database with live data is incredibly difficult
+  - requires knowing the state of the database when the test is run
+  - requires database not being updated for the duration of the tests
+  - requires that the ability to rollback your changes works exactly as you think they do (which would require tests on your rollbacks that have all of the same issues here)
+- In order to make tests idempotent, then each test should start from the same point
+  - this means the database should be either empty or seeded with the same data every time a test is run
+
+As long as you have a database specific for testing, then the necessary setup is to have data that can be seeded before each test.
+
+## Seeding data
+There are several philosophies for seeding data
+1. Seed data from an existing database (copy live data to your test database)
+    - One drawback of this is that it is slow, and it could impact the database that you are pulling data from (locking the db, or making slower while tests are occuring)
+    - A second drawback is that you then have to worry about PII and other sensitive data
+    - Another drawback is that your tests cannot be idempotent because the live data will shift
+    - The main advantage is that you know your changes will behave (almost) identically when they are deployed
+2. Have seeders fill your database with custom data prior to each test
+   - Much faster, and having zero impact on a live database
+   - Much more flexible -- you can curate data to test scenarios that you actually want to test
+   - Requires more maintenace, as you have to have to update your seeders whenever you want to test specific scenarios
+   - Will not be as accurate -- impacts that are not thought of prior to writing your test will not be caught
+
+While both options have their advantages and drawbacks, the second option is generally the preferred approach. The maintenance cost in this second methodology also comes with the benefit of being able to create scenarios that might not actually exist in your live database but theoretically could. Also, simply because the data is more accurate in the first approach does not ensure that the tests written against it are well written or that it will catch problems. Because the first method also comes with the possibility of impacting performance or possibly exposing sensitive information, its drawbacks strongly outweigh its benefits.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

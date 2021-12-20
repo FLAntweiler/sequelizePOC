@@ -1,4 +1,4 @@
-const Employee = require('./typeDefinitions/employee/employeeBaseModel');
+const Employee = require('./typeDefinitions/employee/employeeBaseModel')();
 
 // insert
 const insertEmployee = async (employee) => {
