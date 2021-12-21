@@ -26,12 +26,14 @@ const selectEmployee = async (employeeId) => {
 const patchEmployee = async (employeeId, employee) => {
     return await Employee.update({
         lastName: employee.lastName,
-        firstName: employee.firstName // fields excluded are not touched. 
+        firstName: employee.firstName,
+        middleName: employee.middleName,
+        // fields excluded are not touched. 
     }, {
         where: {
             id: employeeId
         },
-        fields: ['firstName', 'lastName'],
+        fields: ['firstName', 'lastName', 'middleName'],
     })
 }
 

@@ -53,7 +53,8 @@ router.patch('/:id', async (req, res) => {
         if (employeeToUpdate.length < 1) {
             res.status(404).send();
         } else {
-            const updatedEmployee = await patchEmployee(id, employee);
+            await patchEmployee(id, employee);
+            const updatedEmployee = await selectEmployee(id);
             res.status(200).send(updatedEmployee)
         }
     } catch (error) {
