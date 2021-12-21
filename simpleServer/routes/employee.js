@@ -19,12 +19,17 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const selectedEmployee = await selectEmployee(id);
-        res.status(200).send(selectedEmployee)
+        if (selectedEmployee.length < 1) {
+            res.status(404).send();
+        } else {
+            res.status(200).send(selectedEmployee)
+        }
+       
     } catch (error) {
-        console.log("Error fetching employee: ", error);
+        console.log(`Error fetching employee with id: ${id} `, error);
         res.status(500).send();
     }
 }) 
@@ -41,24 +46,34 @@ router.post('/', async (req, res) => {
 })
 
 router.patch('/:id', async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const employee = req.body;
-        const createdEmployee = await patchEmployee(id, employee);
-        res.status(200).send(createdEmployee)
+        const employeeToUpdate = await selectEmployee(id);
+        if (employeeToUpdate.length < 1) {
+            res.status(404).send();
+        } else {
+            const updatedEmployee = await patchEmployee(id, employee);
+            res.status(200).send(updatedEmployee)
+        }
     } catch (error) {
-        console.log("Error creating employee: ", error);
+        console.log(`Error patching employee with id: ${id} `, error);
         res.status(500).send();
     } 
 })
 
 router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
-        const deleteEmployeeResult = await deleteEmployee(id);
-        res.status(204).send(deleteEmployeeResult)
+        const employeeToDelete = await selectEmployee(id);
+        if (employeeToDelete.length < 1) {
+            res.status(404).send();
+        } else {
+            const deleteEmployeeResult = await deleteEmployee(id);
+            res.status(204).send(deleteEmployeeResult)
+        }
     } catch (error) {
-        console.log("Error deleting employee employee: ", error);
+        console.log(`Error deleting employee with id: ${id} `, error);
         res.status(500).send();
     }
 })

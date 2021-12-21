@@ -1,16 +1,35 @@
 const assert = require('assert');
 const { updateEmployee } = require('./employeeMigration');
-const sequelize = require('../../sequelizeTestBase');
+const sequelize = require('../../sequelizeBase');
+const Employee = require('../typeDefinitions/employee/employeeBaseModel');
 
 
 
 describe('Employee Migration', () => {
-    it('Should run all migrations for employee', () => {
+    beforeEach(async () => {
+        await sequelize.define("Employee", {}, { sequelize })
+        await sequelize.sync({ force: true });
+    })
+    it('Should run all migrations for employee', async () => {
+        const TEST_EMPLOYEE = {
+            firstName: "test first name",
+            lastName: "test last name",
+            middleName: "test middleName"
+        }
+        let actual;
         try {
-            updateEmployee(sequelize);
+            updateEmployee();
+            const createResult = await Employee.create(TEST_EMPLOYEE);
+            const findAllResult = await Employee.findAll({ where: {
+                id: createResult.id,
+            }});
+            actual = findAllResult[0];
         } catch (error) {
             console.log("ERROR HAPPENED", error)
             throw new Error("Error occored in test", error)
         }
+        assert.equal(actual.firstName, TEST_EMPLOYEE.firstName)
+        assert.equal(actual.lastName, TEST_EMPLOYEE.lastName)
+        assert.equal(actual.middleName, TEST_EMPLOYEE.middleName)
     })
 })

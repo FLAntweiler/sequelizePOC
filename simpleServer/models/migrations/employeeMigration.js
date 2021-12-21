@@ -1,8 +1,8 @@
 const Employee = require('../typeDefinitions/employee/employeeBaseModel');
 
-const updateEmployee = async (sequelizeInstance) => {
+const updateEmployee = async () => {
     // Actually update the table
-    await Employee(sequelizeInstance).sync({ 
+    await Employee.sync({ 
         // force: true // will drop the table if it exists
         alter: true // will drop columns or add columns on existing table
     })
