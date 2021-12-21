@@ -36,6 +36,27 @@ module.exports = function(sequelize, DataTypes) {
           { name: "id" },
         ]
       },
+      {
+        name: "PK__EndUser__3213E83F590969CC",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "PK__EndUser__3213E83FC667A260",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "PK__EndUser__3213E83FDF68DD2B",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
     ]
   });
 };

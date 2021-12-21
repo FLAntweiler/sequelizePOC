@@ -29,7 +29,28 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
+        name: "PK__Employee__3213E83F18F19B36",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "PK__Employee__3213E83F2D350DF9",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
         name: "PK__Employee__3213E83F5769307B",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "PK__Employee__3213E83FC2D411C0",
         unique: true,
         fields: [
           { name: "id" },

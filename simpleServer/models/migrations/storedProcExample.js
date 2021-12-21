@@ -31,12 +31,4 @@ sequelize.query(`
         )
 `)
 
-// sequelize.query(`
-//     IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'User'))
-//         CREATE TABLE 'User' (
-//             firstName VARCHAR,
-//             lastName VARCHAR,
-//             id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL default NEWID(),
-//         )
-// `)
 
